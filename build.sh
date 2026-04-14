@@ -1,15 +1,22 @@
 #!/bin/bash
 
-# Create a folder for the final static files
+# 1. Create the distribution folder
 mkdir -p dist
 
-# Convert every .php file in the root to .html inside the dist folder
-for f in *.php; do 
-  php "$f" > "dist/${f%.php}.html"
-  echo "Converted $f to dist/${f%.php}.html"
+# 2. Copy static assets (CSS, Images, JS) to dist
+# Replace 'css', 'js', 'images' with your actual folder names
+cp -r css dist/ 2>/dev/null || true
+cp -r js dist/ 2>/dev/null || true
+cp -r images dist/ 2>/dev/null || true
+
+# 3. Convert every PHP file to HTML
+for file in *.php; do
+    if [ -f "$file" ]; then
+        filename=$(basename "$file" .php)
+        echo "Processing $file -> dist/$filename.html"
+        # This executes the PHP and saves the resulting HTML
+        php "$file" > "dist/$filename.html"
+    fi
 done
 
-# Copy your CSS, JS, and Images to the dist folder so they aren't left behind
-cp -r css dist/ 2>/dev/null || :
-cp -r js dist/ 2>/dev/null || :
-cp -r images dist/ 2>/dev/null || :
+echo "Build complete. Files are in /dist"
