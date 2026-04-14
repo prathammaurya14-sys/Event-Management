@@ -15,6 +15,8 @@
 - JS
 
 ## How to Run
-- Install XAMPP/WAMP
-- Import database(event_management.sql)
-- Run on localhost
+- Install XAMPP/WAMP(recommended:WAMP)
+- save this repo in C:/D:->wamp->www->event_management(inside this folder past all the files excluding event_management.sql)
+- Import database in your phpmyadmin(event_management.sql)
+- Run on localhost from wamp server
+- select the folder of"event_managenemt"
