@@ -1,22 +1,25 @@
 #!/bin/bash
-
-# 1. Create the distribution folder
+# 1. Create the folder Netlify will look into
 mkdir -p dist
 
-# 2. Copy static assets (CSS, Images, JS) to dist
-# Replace 'css', 'js', 'images' with your actual folder names
-cp -r css dist/ 2>/dev/null || true
-cp -r js dist/ 2>/dev/null || true
-cp -r images dist/ 2>/dev/null || true
+# 2. Convert index.php to index.html (This is your homepage)
+# Netlify MUST have an index.html in the root of the 'dist' folder
+php index.php > dist/index.html
 
-# 3. Convert every PHP file to HTML
+# 3. Convert all other PHP files
 for file in *.php; do
-    if [ -f "$file" ]; then
-        filename=$(basename "$file" .php)
-        echo "Processing $file -> dist/$filename.html"
-        # This executes the PHP and saves the resulting HTML
-        php "$file" > "dist/$filename.html"
+    if [ "$file" != "index.php" ]; then
+        php "$file" > "dist/${file%.php}.html"
     fi
 done
 
-echo "Build complete. Files are in /dist"
+# 4. CRITICAL: Copy your asset folders
+# If your CSS is in a folder named 'css', copy it into 'dist'
+cp -r css dist/ 2>/dev/null || true
+cp -r js dist/ 2>/dev/null || true
+cp -r images dist/ 2>/dev/null || true
+cp -r assets dist/ 2>/dev/null || true
+
+# 5. Copy any individual CSS/JS files sitting in the root
+cp *.css dist/ 2>/dev/null || true
+cp *.js dist/ 2>/dev/null || true
